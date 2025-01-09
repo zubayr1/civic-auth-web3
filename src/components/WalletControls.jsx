@@ -1,6 +1,6 @@
 import React from "react";
 import { userHasWallet } from "@civic/auth-web3";
-import { useConnect, useAccount, useBalance } from "wagmi";
+import { useConnect, useAccount, useBalance, useWriteContract } from "wagmi";
 
 import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -26,6 +26,8 @@ const WalletControls = ({ userContext }) => {
   const balance = useBalance({
     address: userHasWallet(userContext) ? userContext.walletAddress : undefined,
   });
+
+  const { writeContract } = useWriteContract();
 
   const connectExistingWallet = () => {
     connect({ connector: connectors[0] });
@@ -101,6 +103,23 @@ const WalletControls = ({ userContext }) => {
           )}
         </Box>
       </ThemeProvider>
+
+      <button
+        onClick={() =>
+          writeContract({
+            abi,
+            address: "0xaFC0531D740D8B690c02f6bd6c73A95dD0D01942",
+            functionName: "transferFrom",
+            args: [
+              "0xd2135CfB216b74109775236E36d4b433F1DF507B",
+              "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
+              123n,
+            ],
+          })
+        }
+      >
+        Transfer
+      </button>
     </div>
   );
 };
